@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: cdata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cdata
+  template:
+    metadata:
+      labels:
+        name: cdata
+    spec:
+      containers:
+      - name: cdata
+        image: cdatasynckubernetes.azurecr.io/syncv22:v1
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 8181
+            protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service
+spec:
+  selector:
+    name: cdata
+  ports:
+  - protocol: TCP
+    port: 81
+    targetPort: 8181
